@@ -10,7 +10,6 @@
       - [Supabase CLI Setup](#supabase-cli-setup)
       - [Run the webapp](#run-the-webapp)
       - [(Recommended) Configure git message template](#recommended-configure-git-message-template)
-      - [Github CI workflow (for SSWEs, do during project setup)](#github-ci-workflow-for-sswes-do-during-project-setup)
   - [Stack references](#stack-references)
     - [Typescript](#typescript)
     - [Components and Styling: `shadcn/ui`, Radix, and Tailwind CSS](#components-and-styling-shadcnui-radix-and-tailwind-css)
@@ -32,7 +31,6 @@
       - [Live Share](#live-share)
       - [Format Code Action](#format-code-action)
   - [Deployment guides](#deployment-guides)
-  - [Additional stack options (for SSWEs)](#additional-stack-options-for-sswes)
 
 ---
 
@@ -162,24 +160,6 @@ git config commit.template .gitmessage
 ```
 
 In future commits, you can run `git commit` (with no attached message or `-m` tag) to open the commit message template in VSCode. Fill in the blanks, save the file (`cmd + S`), and close the file (`cmd + W`) to finish the commit.
-
-#### Github CI workflow (for SSWEs, do during project setup)
-
-We implemented a [Github Actions](https://docs.github.com/en/actions) workflow for CI ([continuous integration](<https://www.atlassian.com/continuous-delivery/continuous-integration#:~:text=Continuous%20integration%20(CI)%20is%20the,builds%20and%20tests%20then%20run.>)) that will process any pull requests made to `main`. The workflow auto-formats the code in the pull request with `prettier` and checks for any `eslint` errors. This allows SWEs to freely make commits on side branches (without enforced formatting or linting) but still prevents code with poor quality or formatting from being pushed to `main`. To set this up, do the following steps:
-
-1. In Github, go to Actions > Enable all workflows
-2. Go to Settings > Actions > General and under "Workflow Permissions", make sure "Read and write permissions" is selected.
-3. Create a dummy branch with a trivial edit (try not to add anything that creates a bug), and create a pull request from that branch to `main`. If you forked the starter project repo, make sure you're pull-requesting into the correct repo (your own)! After creating the pull request, you should see "Some checks haven't completed yet". Wait for the check to finish, it should succeed.
-4. Now we can create a Github [branch protection rule](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule) for our `main` branch. Go to Settings > Branches > Add branch protection rule. We recommend using the following settings:
-   - Branch name pattern: `main`
-   - Require a pull request before merging
-     - Require approvals (1)
-     - Dismiss stale pull request approvals when new commits are pushed
-   - Require status checks to pass before merging
-     - Require branches to be up to date before merging
-     - **Required status checks: "Format source code and check for linting errors"** (important to get our CI workflow to run!)
-
----
 
 ## Stack references
 
@@ -426,10 +406,4 @@ Additionally, you need to make sure you configure Supabase's redirect URLs to ac
 The easiest way to do this is to login to your Supabase dashboard and navigate to Authentication (left sidebar) > URL Configuration > Redirect URLs > Add URL, and add the following URL: `https://my-domain-name.com/**`.
 
 Read more about it [here](https://supabase.com/docs/guides/auth#redirect-urls-and-wildcards).
-
----
-
-## Additional stack options (for SSWEs)
-
-Check out [this article](https://t4sg.notion.site/Tech-Stack-Recommendations-279121b43d254bdc96f41fea2af17f77?pvs=4) in our Eng Wiki for additional stack recommendations!
 
