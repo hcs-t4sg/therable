@@ -5,8 +5,11 @@ export default function Home() {
     <>
       <TypographyH2>Welcome to team Therable!</TypographyH2>
       <TypographyP>
-        This starter project is styled with Tailwind CSS and uses shadcn/ui as a component library. Feel free to add
-        your own components!
+        If you&apos;re seeing this, your setup has (most likely) gone well!
+      </TypographyP>
+      <TypographyP>
+        This starter project is styled with Tailwind CSS and uses shadcn/ui as a component library. Things should feel familiar,
+        this is what your deliverable (if you&apos;re new here) was built on!
       </TypographyP>
       <TypographyP>
         This page is an unprotected route accessible to anyone who visits the website. Log in to view authenticated
