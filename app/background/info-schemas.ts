@@ -9,7 +9,12 @@ const patientSchema = z.object({
     .string()
     .nullable()
     .transform((val) => (val?.trim() === "" ? null : val?.trim())),
-  age: z.number().int().positive(),
+  age: z.coerce
+    .number()
+    .int()
+    .gte(0)
+    .nullable()
+    .transform((val) => (val == 0 ? null : val)),
   state: z
     .string()
     .nullable()
@@ -51,6 +56,7 @@ const clinicianSchema = z.object({
     .transform((val) => (val?.trim() === "" ? null : val?.trim())),
 });
 
-type FormData = z.infer<typeof patientSchema>;
+type PatientData = z.infer<typeof patientSchema>;
+type ClinicianData = z.infer<typeof clinicianSchema>;
 
-export { clinicianSchema, patientSchema, FormData };
+export { clinicianSchema, patientSchema, type ClinicianData, type PatientData };

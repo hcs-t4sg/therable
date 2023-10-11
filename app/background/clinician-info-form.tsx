@@ -6,28 +6,28 @@ import { useRouter } from "next/navigation";
 import { type BaseSyntheticEvent } from "react";
 import { useForm } from "react-hook-form";
 
-import { patientSchema, type PatientData } from "./info-schemas";
-import { type Patient } from "./user-types";
+import { clinicianSchema, type ClinicianData } from "./info-schemas";
+import { type Clinician } from "./user-types";
 
-export default function PatientInfoForm(patient: Patient) {
+export default function ClinicianInfoForm(clinician: Clinician) {
   const router = useRouter();
 
-  const defaultValues: Partial<PatientData> = {
-    firstName: patient.firstName ?? undefined,
-    lastName: patient.lastName ?? undefined,
-    age: patient.age ?? undefined,
-    state: patient.state ?? undefined,
-    city: patient.city ?? undefined,
-    zip: patient.zip ?? undefined,
+  const defaultValues: Partial<ClinicianData> = {
+    firstName: clinician.firstName ?? undefined,
+    lastName: clinician.lastName ?? undefined,
+    employer: clinician.employer ?? undefined,
+    state: clinician.state ?? undefined,
+    city: clinician.city ?? undefined,
+    zip: clinician.zip ?? undefined,
   };
 
-  const form = useForm<PatientData>({
-    resolver: zodResolver(patientSchema),
+  const form = useForm<ClinicianData>({
+    resolver: zodResolver(clinicianSchema),
     defaultValues,
     mode: "onChange",
   });
 
-  const onSubmit = (input: PatientData) => {
+  const onSubmit = (input: ClinicianData) => {
     console.log(input);
 
     // TODO: Supabase connection
@@ -62,9 +62,9 @@ export default function PatientInfoForm(patient: Patient) {
         {form.formState.errors.lastName && <span> (Error: {form.formState.errors.lastName?.message})</span>}
       </div>
       <div>
-        <label htmlFor="age">Age: &nbsp;</label>
-        <input type="number" id="age" {...form.register("age")} />
-        {form.formState.errors.age && <span> (Error: {form.formState.errors.age?.message})</span>}
+        <label htmlFor="age">Employer: &nbsp;</label>
+        <input type="text" id="employer" {...form.register("employer")} />
+        {form.formState.errors.employer && <span> (Error: {form.formState.errors.employer?.message})</span>}
       </div>
       <div>
         <label htmlFor="state">State: &nbsp;</label>
