@@ -1,6 +1,5 @@
 import { LoginCard } from "@/components/login-card";
 import { createServerSupabaseClient } from "@/lib/server-utils";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import UserAuthForm from "./user-auth-form";
 
@@ -17,18 +16,12 @@ export default async function LoginPage() {
   }
 
   return (
-    <LoginCard className="sm:w-[350px]">
+    <LoginCard className="sm:w-[550px]">
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Kinnect</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Sign Up</h1>
+        <p className="text-sm text-muted-foreground">Enter your email and password below to sign up</p>
       </div>
       <UserAuthForm />
-      <div className="flex flex-col space-y-1 text-center">
-        <p className="text-xs text-muted-foreground">
-          <Link className="text-base underline" href="/signup">
-            New user? Create an account.
-          </Link>{" "}
-        </p>
-      </div>
     </LoginCard>
   );
 }
