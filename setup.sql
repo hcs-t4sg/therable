@@ -1,95 +1,55 @@
--- -- PostgreSQL tutorial: https://supabase.com/docs/guides/database/tables#resources
-
--- -- Create a table for public profiles
--- create table profiles (
---   id uuid references auth.users not null primary key,
---   email text unique not null,
---   display_name text not null,
---   biography text
--- );
--- -- Set up Row Level Security (RLS)
--- -- See https://supabase.com/docs/guides/auth/row-level-security for more details.
--- alter table profiles
---   enable row level security;
-
--- create policy "Public profiles are viewable by everyone." on profiles
---   for select using (true);
-
--- create policy "Users can insert their own profile." on profiles
---   for insert with check (auth.uid() = id);
-
--- create policy "Users can update own profile." on profiles
---   for update using (auth.uid() = id);
-
--- -- This trigger automatically creates a profile entry when a new user signs up via Supabase Auth.
--- -- See https://supabase.com/docs/guides/auth/managing-user-data#using-triggers for more details.
--- create function public.handle_new_user()
--- returns trigger as $$
--- declare username text;
--- begin
---   select substring(new.email from '(.*)@') into username;
---   insert into public.profiles (id, email, display_name, biography)
---   values (new.id, new.email, username, '');
---   return new;
--- end;
--- $$ language plpgsql security definer;
--- create trigger on_auth_user_created
---   after insert on auth.users
---   for each row execute procedure public.handle_new_user();
-
-
 -- Create a table for users
 create table users (
   id uuid not null primary key,
-  email string not null,
-  password string not null,
+  email text not null,
+  password text not null
 );
 
 -- Create a table for patients
 create table patients (
   id uuid not null primary key,
   userId uuid not null references users(id),
-  firstName string,
-  lastName string,
+  firstName text,
+  lastName text,
   age integer,
-  state string,
-  city string,
-  zip string,
+  state text,
+  city text,
+  zip text
 );
 
 -- Create a table for clinicians
 create table clinicians (
   id uuid not null primary key,
   userId uuid references users(id),
-  firstName string,
-  lastName string,
-  employer string,
-  state string,
-  city string,
-  zip string,
+  firstName text,
+  lastName text,
+  employer text,
+  state text,
+  city text,
+  zip text
 );
 
 -- Create a table for admins
 create table admins (
   id uuid not null primary key,
-  userId uuid not null references users(id),
+  userId uuid not null references users(id)
 );
 
 -- Create a table for clinics - this was being problematic when putting it into supabse
--- create table clinics (
---   id uuid not null primary key,
---   owner clinicians(id) not null,
---   code string not null,
---   name table not null,
--- );
+create table clinics (
+  id uuid not null primary key,
+  owner references clinicians(id) not null,
+  code text not null,
+  name text not null
+);
 
 -- Create a table for messages
 create table messages (
   id uuid not null primary key,
   sender uuid references users(id),
   receiver uuid references users(id),
-  message string not null,
-  media string,
+  message text not null,
+  media text
 );
 
 -- Create a table for tasks
@@ -97,13 +57,13 @@ create table tasks (
   id uuid not null primary key,
   assigner uuid references clinicians(id),
   patient uuid references patients(id),
-  name string not null,
-  description string,
-  media string,
+  name text not null,
+  description text,
+  media text,
   assignDate timestamp not null,
   dueDate timestamp,
   completed boolean not null,
-  completeDate timestamp not null,
+  completeDate timestamp not null
 );
 
 -- Create a table for clinic members
@@ -111,8 +71,8 @@ create table clinicMembers (
   id uuid not null primary key,
   patientId uuid references patients(id),
   clinicId uuid references clinics(id),
-  diagnosis string not null,
-  joinDate timestamp not null,
+  diagnosis text not null,
+  joinDate timestamp not null
 );
 
 -- Create a table for milestones
@@ -121,8 +81,8 @@ create table milestones (
   assigner uuid references clinicians(id),
   patient uuid references patients(id),
   clinicId uuid references clinics(id),
-  name string not null,
-  description string,
+  name text not null,
+  description text
 );
 
 -- Create a table for public profiles
