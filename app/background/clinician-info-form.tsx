@@ -1,20 +1,22 @@
 "use client";
 
+import { toast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { type BaseSyntheticEvent } from "react";
 import { useForm } from "react-hook-form";
 
+import { type Database } from "@/lib/schema";
 import { clinicianSchema, type ClinicianData } from "./info-schemas";
-import { type Clinician } from "./user-types";
+type Clinician = Database["public"]["Tables"]["clinicians"]["Row"];
 
 export default function ClinicianInfoForm(clinician: Clinician) {
   const router = useRouter();
 
   const defaultValues: Partial<ClinicianData> = {
-    firstName: clinician.firstName ?? undefined,
-    lastName: clinician.lastName ?? undefined,
+    firstname: clinician.firstname ?? undefined,
+    lastname: clinician.lastname ?? undefined,
     employer: clinician.employer ?? undefined,
     state: clinician.state ?? undefined,
     city: clinician.city ?? undefined,
@@ -27,39 +29,39 @@ export default function ClinicianInfoForm(clinician: Clinician) {
     mode: "onChange",
   });
 
-  const onSubmit = (input: ClinicianData) => {
-    console.log(input);
+  const onSubmit = async (input: ClinicianData) => {
+    const supabase = createClientComponentClient<Database>();
+    const { error } = await supabase
+      .from("clinicians")
+      .update({
+        userid: clinician.userid,
+        ...input,
+      })
+      .eq("id", clinician.id);
 
-    // TODO: Supabase connection
-    // const supabase = createClientComponentClient<>();
-    // const { error } = await supabase
-    //   .from("patients")
-    //   .update({
-    //     userId: patient.userId,
-    //     ...input,
-    //   })
-    //   .eq("id", patient.id);
+    if (error) {
+      return toast({
+        title: "Something went wrong.",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
 
-    // if (error) {
-    //   console.log(error.message);
-    // }
-
-    // form.reset(input);
-
+    form.reset(input);
     router.refresh();
   };
 
   return (
     <form onSubmit={(e: BaseSyntheticEvent) => void form.handleSubmit(onSubmit)(e)}>
       <div>
-        <label htmlFor="firstName">First Name: &nbsp;</label>
-        <input type="text" id="firstName" {...form.register("firstName")} />
-        {form.formState.errors.firstName && <span> (Error: {form.formState.errors.firstName?.message})</span>}
+        <label htmlFor="firstname">First Name: &nbsp;</label>
+        <input type="text" id="firstname" {...form.register("firstname")} />
+        {form.formState.errors.firstname && <span> (Error: {form.formState.errors.firstname?.message})</span>}
       </div>
       <div>
-        <label htmlFor="lastName">Last Name: &nbsp;</label>
-        <input type="text" id="lastName" {...form.register("lastName")} />
-        {form.formState.errors.lastName && <span> (Error: {form.formState.errors.lastName?.message})</span>}
+        <label htmlFor="lastname">Last Name: &nbsp;</label>
+        <input type="text" id="lastname" {...form.register("lastname")} />
+        {form.formState.errors.lastname && <span> (Error: {form.formState.errors.lastname?.message})</span>}
       </div>
       <div>
         <label htmlFor="age">Employer: &nbsp;</label>

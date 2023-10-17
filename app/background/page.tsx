@@ -1,7 +1,7 @@
 import { createServerSupabaseClient } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
-import PatientInfoForm from "./patient-info-form";
 import ClinicianInfoForm from "./clinician-info-form";
+import PatientInfoForm from "./patient-info-form";
 
 export default async function BackgroundInfo() {
   const supabase = createServerSupabaseClient();
@@ -13,25 +13,20 @@ export default async function BackgroundInfo() {
     redirect("/");
   }
 
-  // TODO: pull user data from Supabase
-  // const userId = session.user.id;
-  // const { data: patient } = await supabase.from("patients").select().eq("userId", userId);
-  // const { data: clinician } = await supabase.from("clinicians").select().eq("userId", userId);
+  // Retrieve user information
+  const userid = session.user.id;
+  const { data: patients } = await supabase.from("patients").select().eq("userid", userid);
+  const { data: clinicians } = await supabase.from("clinicians").select().eq("userid", userid);
 
-  const testUser = {
-    id: "22434",
-    userId: "testuser",
-    firstName: "Bob",
-    lastName: "Johnson"
+  // Allow size > 1 for now
+  if (!patients?.length && !clinicians?.length) {
+    return <>User data not found.</>;
   }
-
-  const patient = testUser;
-  const clinician = testUser;
 
   return (
     <>
-      {patient && (<PatientInfoForm {...patient} />)}
-      {clinician && (<ClinicianInfoForm {...clinician} />)}
+      {patients?.map((patient) => <PatientInfoForm key={patient.id} {...patient} />)}
+      {clinicians?.map((clinician) => <ClinicianInfoForm key={clinician.id} {...clinician} />)}
     </>
   );
 }

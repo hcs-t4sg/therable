@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 const patientSchema = z.object({
-  firstName: z
+  firstname: z
     .string()
     .nullable()
     .transform((val) => (val?.trim() === "" ? null : val?.trim())),
-  lastName: z
+  lastname: z
     .string()
     .nullable()
     .transform((val) => (val?.trim() === "" ? null : val?.trim())),
@@ -30,11 +30,11 @@ const patientSchema = z.object({
 });
 
 const clinicianSchema = z.object({
-  firstName: z
+  firstname: z
     .string()
     .nullable()
     .transform((val) => (val?.trim() === "" ? null : val?.trim())),
-  lastName: z
+  lastname: z
     .string()
     .nullable()
     .transform((val) => (val?.trim() === "" ? null : val?.trim())),
