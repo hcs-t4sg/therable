@@ -12,10 +12,7 @@ export default async function Dashboard() {
   if (!session) {
     // this is a protected route - only users who are signed in can view this route
     redirect("/");
-  } else {
-    console.log(session)
   }
-
   const userEmail = session.user.email;
 
   return (
