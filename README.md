@@ -3,20 +3,20 @@
 - [T4SG Starter Project](#t4sg-starter-project)
   - [Introduction](#introduction)
   - [Setup](#setup)
-      - [Clone repository](#clone-repository)
-      - [Package installation](#package-installation)
-      - [Supabase Connection Setup](#supabase-connection-setup)
-      - [Supabase Database Setup](#supabase-database-setup)
-      - [Supabase CLI Setup](#supabase-cli-setup)
-      - [Run the webapp](#run-the-webapp)
-      - [(Recommended) Configure git message template](#recommended-configure-git-message-template)
+    - [Clone repository](#clone-repository)
+    - [Package installation](#package-installation)
+    - [Supabase Connection Setup](#supabase-connection-setup)
+    - [Supabase Database Setup](#supabase-database-setup)
+    - [Supabase CLI Setup](#supabase-cli-setup)
+    - [Run the webapp](#run-the-webapp)
+    - [(Recommended) Configure git message template](#recommended-configure-git-message-template)
   - [Stack references](#stack-references)
     - [Typescript](#typescript)
     - [Components and Styling: `shadcn/ui`, Radix, and Tailwind CSS](#components-and-styling-shadcnui-radix-and-tailwind-css)
     - [Next.js](#nextjs)
       - [Tips for learning:](#tips-for-learning)
     - [Supabase](#supabase)
-        - [Troubleshooting the Supabase CLI](#troubleshooting-the-supabase-cli)
+      - [Troubleshooting the Supabase CLI](#troubleshooting-the-supabase-cli)
     - [Environment variables](#environment-variables)
   - [Development tools](#development-tools)
     - [Code formatting and linting tools](#code-formatting-and-linting-tools)
@@ -77,10 +77,10 @@ git clone git@github.com:hcs-t4sg/starter-project-2023-v2.git
 
   ```bash
   added 414 packages, and audited 415 packages in 13s
-  
+
   149 packages are looking for funding
   run `npm fund` for details
-  
+
   found 0 vulnerabilities
   ```
 
@@ -92,7 +92,7 @@ git clone git@github.com:hcs-t4sg/starter-project-2023-v2.git
 
 1. Visit the Supabase website, create an account (or login if you already have one), and create a new project. You will be prompted to set a **Database Password; remember it**. Wait for your database provisioning and setup to finish.
 
-   * Try to avoid using special characters like `?`, `$`, etc. in your password.
+   - Try to avoid using special characters like `?`, `$`, etc. in your password.
 
 2. There is a `.env.example` file in your local project directory (e.g. in VSCode). Duplicate it (into the same directory) and rename to `.env`. Inside `.env`, set the following variables according to your Supabase project settings:
 
@@ -100,7 +100,6 @@ git clone git@github.com:hcs-t4sg/starter-project-2023-v2.git
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: From Project Settings > API > Project API Keys > `anon` `public`.
    - `SECRET_SUPABASE_CONNECTION_STRING`: From Project Settings > Database > Connection String > Nodejs. Replace `[YOUR-PASSWORD]` with your database password.
      - If you insist on using special characters in your password you will need to replace them with the **percent-encoded** version ([see this reference](https://stackoverflow.com/a/76551917))
-
 
    The final result should look something like this:
 
@@ -401,9 +400,8 @@ Deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netl
 
 When deploying, make sure you set the appropriate environment variables for your deployment corresponding to those found in `.env`. That is, if you're using a separate Supabase project for production, use the environment variables for that project, but if you're just using your development database, you can paste in the contents of your local `.env` file.
 
-Additionally, you need to make sure you configure Supabase's redirect URLs to accept login requests from your deployed site. Specifically, it needs to accept `https://my-domain-name.com/auth/callback`, since Supabase redirects to the `/auth/callback` route after login. 
+Additionally, you need to make sure you configure Supabase's redirect URLs to accept login requests from your deployed site. Specifically, it needs to accept `https://my-domain-name.com/auth/callback`, since Supabase redirects to the `/auth/callback` route after login.
 
 The easiest way to do this is to login to your Supabase dashboard and navigate to Authentication (left sidebar) > URL Configuration > Redirect URLs > Add URL, and add the following URL: `https://my-domain-name.com/**`.
 
 Read more about it [here](https://supabase.com/docs/guides/auth#redirect-urls-and-wildcards).
-
