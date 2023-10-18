@@ -1,6 +1,6 @@
 -- Create a table for users
 create table users (
-  id uuid not null primary key,
+  id uuid references auth.users not null primary key,
   email text not null,
   password text not null
 );
@@ -85,14 +85,6 @@ create table milestones (
   description text
 );
 
--- Create a table for public profiles
-create table profiles (
-  id uuid references users not null primary key,
-  email text not null unique,
-  display_name text not null,
-  biography text
-);
-
 -- Set up Row Level Security (RLS)
 -- See https://supabase.com/docs/guides/auth/row-level-security for more details.
 alter table profiles enable row level security;
@@ -134,9 +126,14 @@ create trigger on_auth_user_created
 -- ALTER TABLE milestones ENABLE ROW LEVEL SECURITY;
 
 -- -- Allow users to view/edit their own data in the patients, clinicians, and admins tables
--- create policy "Users can view/ edit their own data."
--- on users for select, update
--- using (auth.uid() = userId);
+-- create policy "Users can view their own data." on users
+-- for select using (auth.uid() = userId);
+
+-- create policy "Patients can view their own data." on patients
+-- for select using (auth.uid() = userId);
+
+-- create policy "Clinicians can view their own data." on patients
+-- for select using (auth.uid() = clinicianId);
 
 -- -- Allow clinicians to view patient data
 -- CREATE POLICY "Clinicians can view patient data."
