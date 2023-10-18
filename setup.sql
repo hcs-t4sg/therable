@@ -1,16 +1,9 @@
--- Create a table for users
-create table users (
-  id uuid references auth.users not null primary key,
-  email text not null,
-  password text not null
-);
-
 -- Create a table for patients
 create table patients (
   id uuid not null primary key,
-  userId uuid not null references users(id),
-  firstName text,
-  lastName text,
+  user_id uuid not null references auth.users(id),
+  first_name text,
+  last_name text,
   age integer,
   state text,
   city text,
@@ -20,9 +13,9 @@ create table patients (
 -- Create a table for clinicians
 create table clinicians (
   id uuid not null primary key,
-  userId uuid references users(id),
-  firstName text,
-  lastName text,
+  user_id uuid references auth.users(id),
+  first_name text,
+  last_name text,
   employer text,
   state text,
   city text,
@@ -32,7 +25,7 @@ create table clinicians (
 -- Create a table for admins
 create table admins (
   id uuid not null primary key,
-  userId uuid not null references users(id)
+  user_id uuid not null references auth.users(id)
 );
 
 -- Create a table for clinics - this was being problematic when putting it into supabse
@@ -46,8 +39,8 @@ create table clinics (
 -- Create a table for messages
 create table messages (
   id uuid not null primary key,
-  sender uuid references users(id),
-  receiver uuid references users(id),
+  sender uuid references auth.users(id),
+  receiver uuid references auth.users(id),
   message text not null,
   media text
 );
@@ -60,19 +53,19 @@ create table tasks (
   name text not null,
   description text,
   media text,
-  assignDate timestamp not null,
-  dueDate timestamp,
+  assign_date timestamp not null,
+  due_date timestamp,
   completed boolean not null,
-  completeDate timestamp not null
+  complete_date timestamp not null
 );
 
 -- Create a table for clinic members
-create table clinicMembers (
+create table clinic_members (
   id uuid not null primary key,
-  patientId uuid references patients(id),
-  clinicId uuid references clinics(id),
+  patient_id uuid references patients(id),
+  clinic_id uuid references clinics(id),
   diagnosis text not null,
-  joinDate timestamp not null
+  join_date timestamp not null
 );
 
 -- Create a table for milestones
@@ -80,42 +73,15 @@ create table milestones (
   id uuid not null primary key,
   assigner uuid references clinicians(id),
   patient uuid references patients(id),
-  clinicId uuid references clinics(id),
+  clinic_id uuid references clinics(id),
   name text not null,
   description text
 );
 
--- Set up Row Level Security (RLS)
--- See https://supabase.com/docs/guides/auth/row-level-security for more details.
-alter table profiles enable row level security;
+-- -- Set up Row Level Security (RLS)
+-- -- See https://supabase.com/docs/guides/auth/row-level-security for more details.
 
-create policy "Public profiles are viewable by everyone." on profiles
-  for select using (true);
-
-create policy "Users can insert their own profile." on profiles
-  for insert with check (auth.uid() = id);
-
-create policy "Users can update their own profile." on profiles
-  for update using (auth.uid() = id);
-
--- This trigger automatically creates a profile entry when a new user signs up via Supabase Auth.
--- See https://supabase.com/docs/guides/auth/managing-user-data#using-triggers for more details.
-create function public.handle_new_user()
-returns trigger as $$
-declare username text;
-begin
-  select substring(new.email from '(.*)@') into username;
-  insert into public.profiles (id, email, display_name, biography)
-  values (new.id, new.email, username, '');
-  return new;
-end;
-$$ language plpgsql security definer;
-
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
-
--- -- Enable Row Level Security for patients, clinicians, admins, clinics, messages, tasks, clinicMembers, and milestones tables
+-- Enable Row Level Security for patients, clinicians, admins, clinics, messages, tasks, clinicMembers, and milestones tables
 -- ALTER TABLE patients ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE clinicians ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE admins ENABLE ROW LEVEL SECURITY;
