@@ -16,22 +16,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       {/* Hydration warning suppressed because of next-themes https://github.com/pacocoursey/next-themes */}
       <body>
         <Providers>
-          <div className="flex-col md:flex">
-            <div className="border-b">
-              <div className="flex h-16 items-center px-4">
-                <Navbar className="mx-6" />
-                <div className="ml-auto flex items-center space-x-4">
-                  <ModeToggle />
-                  <AuthStatus />
-                </div>
+          <div className="flex">
+            {/* Sidebar (Navbar) */}
+            <div className="w- h-screen bg-white p-4 flex flex-col justify-between">
+              <div className="flex-grow-1"></div>
+              <Navbar />
+              <div className="flex-grow-2"></div>
+            </div>
+            {/* Main Content */}
+            <div className="flex-1 p-4">
+              <div className="flex items-center justify-end space-x-4 p-4">
+                <ModeToggle />
+                <AuthStatus />
               </div>
+              <div className="mt-16 p-4">{children}</div>
             </div>
-            {/* Conditionally display website if logged in, else display login page */}
-            {/* <div className="flex-1 space-y-4 p-8 pt-6"> */}
-            <div className="space-y-6 p-10 pb-16 md:block">
-              <main>{children}</main>
-            </div>
-            {/* </div> */}
           </div>
         </Providers>
         <Toaster />
