@@ -13,7 +13,7 @@ interface PatientCardProps {
 export default function PatientCard(props: PatientCardProps) {
   return (
     <Card className="h-[260px] w-[252px] rounded-xl shadow">
-      <Flex direction="column" justify="between" gap="2">
+      <Flex className="h-full" direction="column" justify="between" gap="2">
         <Flex pl="1" pt="2" gap="3" align="start">
           <div className="pt-2">
             <Avatar
