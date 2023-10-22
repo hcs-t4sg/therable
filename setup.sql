@@ -101,60 +101,29 @@ create table milestones (
 -- create policy "Clinicians can view their own data." on patients
 -- for select using (auth.uid() = clinicianId);
 
--- -- Allow clinicians to view patient data
--- CREATE POLICY "Clinicians can view patient data."
--- AS PERMISSIVE
--- FOR SELECT
--- USING (auth.uid() = userId OR (auth.has_role('clinician') AND auth.uid() = (SELECT userId FROM patients WHERE id = current.id)));
+-- This trigger automatically creates a profile entry when a new user signs up via Supabase Auth.
+-- See https://supabase.com/docs/guides/auth/managing-user-data#using-triggers for more details.
+create function public.handle_new_user()
+returns trigger as $$
+DECLARE
+    username text;
+BEGIN
+    SELECT substring(NEW.email from '(.*)@') INTO username;
 
--- -- Allow clinicians to create/edit/delete/view their clinics
--- CREATE POLICY "Clinicians can create/ edit/ delete their clinics."
--- AS PERMISSIVE
--- FOR INSERT, UPDATE, DELETE, SELECT
--- USING (auth.uid() = userId AND current.id = (SELECT clinicId FROM clinics WHERE id = current.id));
+    INSERT INTO public.profiles (id, email, display_name, biography)
+    VALUES (NEW.id, NEW.id, username, '');
 
--- -- Allow users to view/insert their messages (whether they are sender or receiver)
--- CREATE POLICY "Users can view/ insert their messages."
--- AS PERMISSIVE
--- FOR SELECT, INSERT
--- USING (auth.uid() = sender OR auth.uid() = receiver);
+    IF NEW.raw_user_meta_data->>'type' = 'patient' THEN
+        INSERT INTO public.patients (user_id, first_name, last_name, age, state, city, zip)
+        VALUES (NEW.id, NEW.raw_user_meta_data ->>'first_name', NEW.raw_user_meta_data->>'last_name', (NEW.raw_user_meta_data->>'age')::integer, NEW.raw_user_meta_data->>'state', NEW.raw_user_meta_data->>'city', NEW.raw_user_meta_data->>'zipcode');
+    ELSIF NEW.raw_user_meta_data->>'type' = 'clinician' THEN
+        INSERT INTO public.clinicians (user_id, first_name, last_name, employer, state, city, zip)
+        VALUES (NEW.id, NEW.raw_user_meta_data->>'first_name', NEW.raw_user_meta_data->>'last_name', NEW.raw_user_meta_data->>'employer', NEW.raw_user_meta_data->>'state', NEW.raw_user_meta_data->>'city', NEW.raw_user_meta_data->>'zipcode');
+    END IF;
 
--- -- Allow patients to view/edit tasks they have been assigned
--- CREATE POLICY "Patients can view/ edit assigned tasks."
--- AS PERMISSIVE
--- FOR SELECT, UPDATE
--- USING (auth.uid() = userId);
-
--- -- Allow clinicians to create/edit/delete/view tasks they have assigned
--- CREATE POLICY "Clinicians can create/ edit/ delete/ view assigned tasks."
--- AS PERMISSIVE
--- FOR INSERT, UPDATE, DELETE, SELECT
--- USING (auth.uid() = assigner);
-
--- -- Allow patients to view milestones they have been assigned
--- CREATE POLICY "Patients can view milestones they have been assigned"
--- AS PERMISSIVE
--- FOR SELECT
--- USING (auth.uid() = userId);
-
--- -- Allow clinicians to create/edit/delete/view milestones they have assigned
--- CREATE POLICY "Clinicians can create/ edit/ delte/ view assign milestones."
--- AS PERMISSIVE
--- FOR INSERT, UPDATE, DELETE, SELECT
--- USING (auth.uid() = assigner);
-
--- -- Create policy for clinic members to view clinics they belong to
--- CREATE POLICY clinic_members_access_policy
--- AS PERMISSIVE
--- FOR SELECT
--- USING (auth.uid() = userId OR auth.has_role('clinician'));
-
--- -- Apply RLS policies to each respective table
--- ALTER TABLE patients ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE clinicians ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE admins ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE clinics ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE clinicMembers ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE milestones ENABLE ROW LEVEL SECURITY;
+    RETURN NEW;
+END;
+$$ language plpgsql security definer;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
