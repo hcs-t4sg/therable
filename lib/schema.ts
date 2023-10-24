@@ -111,7 +111,7 @@ export interface Database {
         };
         Insert: {
           code: string;
-          id: string;
+          id?: string;
           name: string;
           owner: string;
         };
