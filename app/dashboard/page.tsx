@@ -4,7 +4,10 @@ import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
   // Create supabase server component client and obtain user session from stored cookie
+  console.log("akdlfjskldfjklasdjfklsdjfkljsdklfjalkdsf");
   const supabase = createServerSupabaseClient();
+  console.log("akdlfjskldfjklasdjfklsdjfkljsdklfjalkdsf");
+console.log(supabase)
   const {
     data: { session },
   } = await supabase.auth.getSession();
