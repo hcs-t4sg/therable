@@ -1,5 +1,5 @@
-import { TypographyH2 } from "@/components/ui/typography";
+import { Heading } from "@radix-ui/themes";
 
 export default function Loading() {
-  return <TypographyH2>Loading...</TypographyH2>;
+  return <Heading>Loading...</Heading>;
 }

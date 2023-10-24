@@ -1,7 +1,5 @@
-import { TypographyH3 } from "@/components/ui/typography";
-
-// https://nextjs.org/docs/app/api-reference/file-conventions/not-found
+import { Heading } from "@radix-ui/themes";
 
 export default function NotFound() {
-  return <TypographyH3>404 - Page not found</TypographyH3>;
+  return <Heading>404 - Page not found</Heading>;
 }

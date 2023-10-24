@@ -1,5 +1,5 @@
-import { TypographyH2, TypographyP } from "@/components/ui/typography";
 import { createServerSupabaseClient } from "@/lib/server-utils";
+import { Heading, Text } from "@radix-ui/themes";
 import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
@@ -17,9 +17,9 @@ export default async function Dashboard() {
 
   return (
     <>
-      <TypographyH2>Dashboard</TypographyH2>
-      <TypographyP>This is a protected route accessible only to signed-in users.</TypographyP>
-      {userEmail && <TypographyP>{`Your email is ${userEmail}`}</TypographyP>}
+      <Heading>Dashboard</Heading>
+      <Text as="p">This is a protected route accessible only to signed-in users.</Text>
+      {userEmail && <Text as="p">{`Your email is ${userEmail}`}</Text>}
     </>
   );
 }

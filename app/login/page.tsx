@@ -1,5 +1,5 @@
-import { LoginCard } from "@/components/login-card";
 import { createServerSupabaseClient } from "@/lib/server-utils";
+import { Card } from "@radix-ui/themes";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import UserAuthForm from "./user-auth-form";
@@ -17,18 +17,18 @@ export default async function LoginPage() {
   }
 
   return (
-    <LoginCard className="sm:w-[350px]">
-      <div className="flex flex-col space-y-2 text-center">
+    <Card className="sm:w-[350px]">
+      <div className="flex flex-col space-y-2 pb-4 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">Kinnect</h1>
       </div>
       <UserAuthForm />
-      <div className="flex flex-col space-y-1 text-center">
+      <div className="flex flex-col space-y-1 pt-4 text-center">
         <p className="text-xs text-muted-foreground">
           <Link className="text-base underline" href="/signup">
             New user? Create an account.
           </Link>{" "}
         </p>
       </div>
-    </LoginCard>
+    </Card>
   );
 }
