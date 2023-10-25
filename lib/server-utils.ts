@@ -15,3 +15,18 @@ export const createServerSupabaseClient = cache(() => {
   const cookieStore = cookies();
   return createServerComponentClient<Database>({ cookies: () => cookieStore });
 });
+
+export const getUserType = async () => {
+  const supabase = createServerSupabaseClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  return new Promise((resolve, reject) => {
+    if (!session) {
+      reject(Error);
+    } else {
+      resolve(session.user.user_metadata.type);
+    }
+  });
+};
