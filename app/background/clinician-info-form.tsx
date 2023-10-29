@@ -49,6 +49,11 @@ export default function ClinicianInfoForm(clinician: Clinician) {
 
     form.reset(input);
     router.refresh();
+    return toast({
+      title: "Success!",
+      description: "Your information has been updated.",
+      variant: 'default'
+    })
   };
 
   return (
