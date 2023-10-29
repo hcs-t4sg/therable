@@ -15,8 +15,8 @@ export default async function BackgroundInfo() {
 
   // Retrieve user information
   const userid = session.user.id;
-  const { data: patients } = await supabase.from("patients").select().eq("userid", userid);
-  const { data: clinicians } = await supabase.from("clinicians").select().eq("userid", userid);
+  const { data: patients } = await supabase.from("patients").select().eq("user_id", userid);
+  const { data: clinicians } = await supabase.from("clinicians").select().eq("user_id", userid);
 
   // Allow size > 1 for now
   if (!patients?.length && !clinicians?.length) {

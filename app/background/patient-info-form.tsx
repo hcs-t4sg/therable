@@ -15,8 +15,8 @@ export default function PatientInfoForm(patient: Patient) {
   const router = useRouter();
 
   const defaultValues: Partial<PatientData> = {
-    firstname: patient.firstname ?? undefined,
-    lastname: patient.lastname ?? undefined,
+    first_name: patient.first_name ?? undefined,
+    last_name: patient.last_name ?? undefined,
     age: patient.age ?? undefined,
     state: patient.state ?? undefined,
     city: patient.city ?? undefined,
@@ -34,7 +34,7 @@ export default function PatientInfoForm(patient: Patient) {
     const { error } = await supabase
       .from("patients")
       .update({
-        userid: patient.userid,
+        user_id: patient.user_id,
         ...input,
       })
       .eq("id", patient.id);
@@ -55,13 +55,13 @@ export default function PatientInfoForm(patient: Patient) {
     <form onSubmit={(e: BaseSyntheticEvent) => void form.handleSubmit(onSubmit)(e)}>
       <div>
         <label htmlFor="firstname">First Name: &nbsp;</label>
-        <input type="text" id="firstname" {...form.register("firstname")} />
-        {form.formState.errors.firstname && <span> (Error: {form.formState.errors.firstname?.message})</span>}
+        <input type="text" id="firstname" {...form.register("first_name")} />
+        {form.formState.errors.first_name && <span> (Error: {form.formState.errors.first_name?.message})</span>}
       </div>
       <div>
         <label htmlFor="lastname">Last Name: &nbsp;</label>
-        <input type="text" id="lastname" {...form.register("lastname")} />
-        {form.formState.errors.lastname && <span> (Error: {form.formState.errors.lastname?.message})</span>}
+        <input type="text" id="lastname" {...form.register("last_name")} />
+        {form.formState.errors.last_name && <span> (Error: {form.formState.errors.last_name?.message})</span>}
       </div>
       <div>
         <label htmlFor="age">Age: &nbsp;</label>
