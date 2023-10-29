@@ -52,8 +52,8 @@ export default function ClinicianInfoForm(clinician: Clinician) {
     return toast({
       title: "Success!",
       description: "Your information has been updated.",
-      variant: 'default'
-    })
+      variant: "default",
+    });
   };
 
   return (
