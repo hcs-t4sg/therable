@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm } from 'react-hook-form';
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { type Database } from "@/lib/schema";
 type Clinician = Database["public"]["Tables"]["clinicians"]["Row"];
@@ -21,8 +20,8 @@ export default function CreateClinicForm(clinician: Clinician) {
   //     handleSubmit,
   //     formState: { errors },
   //   } = useForm<FormData>();
-  // const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const [isLoading, setIsLoading] = useState(false);
   const [clinicName, setClinicName] = useState<string>("")
@@ -31,6 +30,7 @@ export default function CreateClinicForm(clinician: Clinician) {
     const codeLength = 16;
     const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       let code = '';
       for (let i = 0; i < codeLength; i++) {
@@ -55,6 +55,10 @@ export default function CreateClinicForm(clinician: Clinician) {
 
   const onSubmit = async (name: string) => {
     setIsLoading(true);
+    if (!name){
+      setErrorMessage("Clinic name cannot be empty.")
+      return
+    }
 
     try {
         // Generate a unique clinic code
@@ -68,7 +72,7 @@ export default function CreateClinicForm(clinician: Clinician) {
         };
 
         // Insert the clinic data into the 'clinics' table
-        const { data: clinic, error } = await supabaseClient
+        const { error } = await supabaseClient
           .from("clinics")
           .upsert(clinicData);
 
@@ -86,7 +90,7 @@ export default function CreateClinicForm(clinician: Clinician) {
 
   return (
     <div>
-      <form onSubmit={() => void onSubmit(clinicName)}>
+      <form>
           <div>
             <label htmlFor="clinicName">Clinic Name</label>
             <input
@@ -97,13 +101,13 @@ export default function CreateClinicForm(clinician: Clinician) {
             />
             {/* {errors.clinicName && <p>{errors.clinicName.message}</p>} */}
           </div>
-          <button type="submit" disabled={isLoading}>
+          <button onClick={() => void onSubmit(clinicName)} disabled={isLoading}>
             Create Clinic
           </button>
         </form>
 
-      {/* {successMessage && <p>{successMessage}</p>}
-      {errorMessage && <p>{errorMessage}</p>} */}
+      {successMessage && <p>{successMessage}</p>}
+      {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
 };
