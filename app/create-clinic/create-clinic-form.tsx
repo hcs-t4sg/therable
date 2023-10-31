@@ -4,26 +4,22 @@ import { type Database } from "@/lib/schema";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 type Clinician = Database["public"]["Tables"]["clinicians"]["Row"];
+type Clinic = Database["public"]["Tables"]["clinics"]["Row"];
 
-export default function CreateClinicForm(clinician: Clinician) {
+export default function CreateClinicForm(props: { clinician: Clinician, clinic: Clinic | null }) {
   const supabaseClient = createClientComponentClient<Database>();
 
-  // type FormData = {
-  //   clinicName: string;
-  // };
-
-  // const CreateClinicForm: React.FC = () => {
-  //   const {
-  //     register,
-  //     handleSubmit,
-  //     formState: { errors },
-  //   } = useForm<FormData>();
   const [message, setMessage] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [clinicName, setClinicName] = useState<string>("");
 
   async function generateUniqueCode() {
+    // Spit out clinician's code if they have already made a clinic
+    if (props.clinic?.code) {
+      return props.clinic.code;
+    }
+
     const codeLength = 16;
     const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
 
@@ -56,18 +52,18 @@ export default function CreateClinicForm(clinician: Clinician) {
 
       // putting this before line 55 refreshes page for some reason; marked for fixing later
       if (!name) {
-        throw Error("Clinic name cannot be empty")
+        throw Error("Clinic name cannot be empty");
       }
 
       // Define the data to be inserted
       const clinicData = {
         name,
         code: clinicCode,
-        owner: clinician.id,
+        owner: props.clinician.id,
       };
 
       // Insert the clinic data into the 'clinics' table
-      const { error } = await supabaseClient.from("clinics").upsert(clinicData);
+      const { error } = await supabaseClient.from("clinics").upsert(clinicData, { onConflict: "code" });
 
       if (error) {
         setMessage(error.message);
