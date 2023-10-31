@@ -4,9 +4,8 @@ import { type Database } from "@/lib/schema";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 type Clinician = Database["public"]["Tables"]["clinicians"]["Row"];
-type Clinic = Database["public"]["Tables"]["clinics"]["Row"];
 
-export default function CreateClinicForm(props: { clinician: Clinician, clinic: Clinic | null }) {
+export default function CreateClinicForm(clinician: Clinician) {
   const supabaseClient = createClientComponentClient<Database>();
 
   const [message, setMessage] = useState<string | null>(null);
@@ -16,10 +15,13 @@ export default function CreateClinicForm(props: { clinician: Clinician, clinic: 
 
   async function generateUniqueCode() {
     // Spit out clinician's code if they have already made a clinic
-    if (props.clinic?.code) {
-      return props.clinic.code;
+    const { data: existingClinic } = await supabaseClient.from("clinics").select().eq("owner", clinician.id).single();
+
+    if (existingClinic?.code) {
+      return existingClinic?.code
     }
 
+    // Otherwise, make a new code
     const codeLength = 16;
     const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
 
@@ -59,7 +61,7 @@ export default function CreateClinicForm(props: { clinician: Clinician, clinic: 
       const clinicData = {
         name,
         code: clinicCode,
-        owner: props.clinician.id,
+        owner: clinician.id,
       };
 
       // Insert the clinic data into the 'clinics' table
