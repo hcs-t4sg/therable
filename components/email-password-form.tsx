@@ -73,7 +73,7 @@ export function UserAuthFormUI({ _onSubmit, isLoading, buttonDisplay, className,
             <Input
               id="email"
               className="border-black"
-              placeholder="Username"
+              placeholder="Email"
               type="email"
               autoCapitalize="none"
               autoComplete="email"
