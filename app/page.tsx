@@ -13,7 +13,5 @@ export default async function Home() {
     // Users who are already signed in should be redirected to dashboard
     redirect("/login");
   }
-  return (
-      <TypographyH2>Welcome to Therable!</TypographyH2>
-  );
+  return <TypographyH2>Welcome to Therable!</TypographyH2>;
 }
