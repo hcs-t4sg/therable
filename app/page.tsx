@@ -1,4 +1,4 @@
-import { TypographyH2, TypographyP } from "@/components/ui/typography";
+import { TypographyH2 } from "@/components/ui/typography";
 import { createServerSupabaseClient } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
 
