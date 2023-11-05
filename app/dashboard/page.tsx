@@ -20,7 +20,6 @@ export default async function Dashboard() {
       <TypographyH2>Dashboard</TypographyH2>
       <TypographyP>This is a protected route accessible only to signed-in users.</TypographyP>
       {userEmail && <TypographyP>{`Your email is ${userEmail}`}</TypographyP>}
-      <br />
     </>
   );
 }
