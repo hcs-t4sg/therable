@@ -6,7 +6,7 @@ import PageHeader from "@/components/global/pageheader";
 import "./globals.css";
 import { Providers } from "./providers";
 
-// conditional for catching the error, if logged in should be at top or side 
+// conditional for catching the error, if logged in should be at top or side
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const clinicName = "Your Clinic Name"; // replace with your clinic's name
