@@ -1,4 +1,6 @@
-import { Avatar, Box, Button, Card, Flex, Text } from "@radix-ui/themes";
+"use client";
+
+import * as Avatar from "@radix-ui/react-avatar";
 
 interface PatientCardProps {
   userId: string;
@@ -12,56 +14,48 @@ interface PatientCardProps {
 
 export default function PatientCard(props: PatientCardProps) {
   return (
-    <Card className="h-[260px] w-[252px] rounded-xl shadow">
-      <Flex className="h-full" direction="column" justify="between" gap="2">
-        <Flex pl="1" pt="2" gap="3" align="start">
-          <div className="pt-2">
-            <Avatar
-              radius="full"
-              size="5"
-              src={props.avatar}
-              fallback={props.firstName.charAt(0) + props.lastName.charAt(0)}
-              className="border-2"
-            />
-          </div>
-          <div className="space-y-1">
-            <Text className="pb-0.25" as="div" size="4" weight="medium">
+    <div className="h-[260px] w-[252px] rounded-xl border-2 p-4 shadow-md">
+      <div className="flex h-full flex-col justify-between">
+        <div className="flex flex-row gap-3 pl-1 pt-2">
+          <Avatar.Root
+            className="flex h-16 w-16 items-center justify-center
+                overflow-hidden rounded-full border-2 align-middle"
+          >
+            <Avatar.Image className="object-cover" src={props.avatar} alt={props.lastName} />
+            <Avatar.Fallback className="text-2xl font-medium">
+              {props.firstName.charAt(0) + props.lastName.charAt(0)}
+            </Avatar.Fallback>
+          </Avatar.Root>
+          <div className="space-y-1 text-xs">
+            <div className="pb-0.25 text-lg font-medium">
               {props.firstName} {props.lastName}
-            </Text>
-            {props.diagnosis && (
-              <Text as="div" size="1">
-                Diagnosis: {props.diagnosis}
-              </Text>
-            )}
+            </div>
+            {props.diagnosis && <div>Diagnosis: {props.diagnosis}</div>}
             {props.lastVisit && (
-              <Text as="div" size="1">
+              <div>
                 Last visit:{" "}
                 {props.lastVisit.getMonth() + "/" + props.lastVisit.getDay() + "/" + props.lastVisit.getFullYear()}
-              </Text>
+              </div>
             )}
             {props.nextVisit && (
-              <Text as="div" size="1">
+              <div>
                 Next visit:{" "}
                 {props.nextVisit.getMonth() + "/" + props.nextVisit.getDay() + "/" + props.nextVisit.getFullYear()}
-              </Text>
+              </div>
             )}
           </div>
-        </Flex>
-        <Flex gap="6" justify="center" pb="1">
-          <Button className="h-fit" variant="soft" color="green" radius="large">
-            <Flex direction="column" pb="2" pt="2">
-              <Box height="7" />
-              <Text size="1">Progress</Text>
-            </Flex>
-          </Button>
-          <Button className="h-fit" variant="soft" color="gray" radius="large">
-            <Flex direction="column" pb="2" pt="2">
-              <Box height="7" />
-              <Text size="1">Message</Text>
-            </Flex>
-          </Button>
-        </Flex>
-      </Flex>
-    </Card>
+        </div>
+        <div className="flex flex-row justify-center gap-6 pb-1">
+          <button className="h-fit rounded-lg bg-green-50 p-2 pl-3 pr-4">
+            <div className="h-12" />
+            <div className="text-xs font-medium text-green-700">Progress</div>
+          </button>
+          <button className="h-fit rounded-lg bg-gray-100 p-2 pl-3 pr-4">
+            <div className="h-12" />
+            <div className="text-xs font-medium text-gray-500">Message</div>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
