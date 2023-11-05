@@ -36,9 +36,9 @@ export default async function MyPatients() {
               firstName={patient.patients ? patient.patients.first_name : "FNU"}
               lastName={patient.patients ? patient.patients.last_name : "LNU"}
               diagnosis={patient.diagnosis}
-              lastVisit={new Date()}
-              nextVisit={new Date()}
-              avatar="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+              lastVisit={new Date()} // placeholder
+              nextVisit={new Date()} // placeholder
+              avatar="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" // placeholder
             />
           ))
         ) : clinic ? (
