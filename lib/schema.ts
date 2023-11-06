@@ -36,8 +36,8 @@ export interface Database {
         Insert: {
           clinic_id?: string | null;
           diagnosis: string;
-          id: string;
-          join_date: string;
+          id?: string;
+          join_date?: string;
           patient_id?: string | null;
         };
         Update: {
@@ -250,7 +250,7 @@ export interface Database {
           sender: string | null;
         };
         Insert: {
-          id: string;
+          id?: string;
           media?: string | null;
           message: string;
           receiver?: string | null;

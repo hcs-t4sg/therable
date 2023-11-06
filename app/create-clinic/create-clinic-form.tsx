@@ -10,16 +10,6 @@ export default function CreateClinicForm(clinician: Clinician) {
 
   const supabaseClient = createClientComponentClient<Database>();
 
-  // type FormData = {
-  //   clinicName: string;
-  // };
-
-  // const CreateClinicForm: React.FC = () => {
-  //   const {
-  //     register,
-  //     handleSubmit,
-  //     formState: { errors },
-  //   } = useForm<FormData>();
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -27,6 +17,13 @@ export default function CreateClinicForm(clinician: Clinician) {
   const [clinicName, setClinicName] = useState<string>("")
 
   async function generateUniqueCode() {
+    // Spit out clinician's code if they have already made a clinic
+    const { data: existingClinic } = await supabaseClient.from("clinics").select().eq("owner", clinician.id).single();
+
+    if (existingClinic?.code) {
+      return existingClinic?.code
+    }
+
     const codeLength = 16;
     const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
 
@@ -91,20 +88,31 @@ export default function CreateClinicForm(clinician: Clinician) {
   return (
     <div>
       <form>
-          <div>
-            <label htmlFor="clinicName">Clinic Name</label>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px', display: 'inline-block' }}>
             <input
               id="clinicName"
               type="text"
               autoComplete="off"
+              placeholder="Clinic Name"  // Add the placeholder attribute
               onChange={(e) => setClinicName(e.target.value)}
             />
-            {/* {errors.clinicName && <p>{errors.clinicName.message}</p>} */}
           </div>
-          <button onClick={() => void onSubmit(clinicName)} disabled={isLoading}>
-            Create Clinic
-          </button>
-        </form>
+        </div>
+        <button onClick={() => void onSubmit(clinicName)} disabled={isLoading}
+              style={{
+                display: 'block',
+                margin: '0 auto',
+                backgroundColor: 'black',
+                color: 'white',
+                padding: '2px 10px',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}>
+          Submit
+        </button>
+      </form>
 
       {successMessage && <p>{successMessage}</p>}
       {errorMessage && <p>{errorMessage}</p>}

@@ -1,6 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
-import CreateClinicForm from "./create-clinic-form";
+import JoinClinicForm from "./join-clinic-form";
 
 export default async function CreateClinicPage() {
   // Create supabase server component client and obtain user session from stored cookie
@@ -13,19 +13,19 @@ export default async function CreateClinicPage() {
     redirect("/login");
   }
 
-  const { data: clinician } = await supabase.from("clinicians").select().eq("user_id", session.user.id).maybeSingle();
+  const { data: patient } = await supabase.from("patients").select().eq("user_id", session.user.id).maybeSingle();
   // Rediret to dashboard if user is not a clinician
-  if (!clinician){
+  if (!patient){
     redirect("/dashboard")
   }
 
   return (
-    <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+    <div style={{ border: '1px solid black', padding: '20px', borderRadius: '4px' }} className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Create Clinic</h1>
-        <p className="text-sm text-muted-foreground">Enter the name of the clinic you want to create.</p>
+        <h1 className="text-2xl font-semibold tracking-tight">Code</h1>
+        <p className="text-sm text-muted-foreground">Ask your physical therapist for the code to be added to the clinic's portal.</p>
       </div>
-      <CreateClinicForm {...clinician} />
+      <JoinClinicForm {...patient} />
     </div>
   );
 }
