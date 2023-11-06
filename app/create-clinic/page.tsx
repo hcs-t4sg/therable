@@ -13,10 +13,10 @@ export default async function CreateClinicPage() {
     redirect("/login");
   }
 
-  const { data: clinician } = await supabase.from("clinicians").select().eq("user_id", session.user.id).maybeSingle();
+  const { data: clinician } = await supabase.from("clinicians").select().eq("user_id", session.user.id).single();
   // Rediret to dashboard if user is not a clinician
-  if (!clinician){
-    redirect("/dashboard")
+  if (!clinician) {
+    redirect("/dashboard");
   }
 
   return (
