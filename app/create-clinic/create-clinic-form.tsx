@@ -18,7 +18,7 @@ export default function CreateClinicForm(clinician: Clinician) {
     const { data: existingClinic } = await supabaseClient.from("clinics").select().eq("owner", clinician.id).single();
 
     if (existingClinic?.code) {
-      return existingClinic?.code
+      return existingClinic?.code;
     }
 
     // Otherwise, make a new code
@@ -70,7 +70,7 @@ export default function CreateClinicForm(clinician: Clinician) {
       if (error) {
         setMessage(error.message);
       } else {
-        setMessage('Your clinic code: ${clinicCode}');
+        setMessage("Your clinic code: ${clinicCode}");
       }
     } catch (error) {
       setMessage((error as Error).message);
@@ -82,28 +82,31 @@ export default function CreateClinicForm(clinician: Clinician) {
   return (
     <div>
       <form>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px', display: 'inline-block' }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ marginBottom: "10px", border: "1px solid #ccc", borderRadius: "4px", display: "inline-block" }}>
             <input
               id="clinicName"
               type="text"
               autoComplete="off"
-              placeholder="Clinic Name"  // Add the placeholder attribute
+              placeholder="Clinic Name" // Add the placeholder attribute
               onChange={(e) => setClinicName(e.target.value)}
             />
           </div>
         </div>
-        <button onClick={() => void onSubmit(clinicName)} disabled={isLoading}
-              style={{
-                display: 'block',
-                margin: '0 auto',
-                backgroundColor: 'black',
-                color: 'white',
-                padding: '2px 10px',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}>
+        <button
+          onClick={() => void onSubmit(clinicName)}
+          disabled={isLoading}
+          style={{
+            display: "block",
+            margin: "0 auto",
+            backgroundColor: "black",
+            color: "white",
+            padding: "2px 10px",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
           Submit
         </button>
       </form>
