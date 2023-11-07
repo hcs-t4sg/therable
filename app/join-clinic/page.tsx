@@ -27,7 +27,7 @@ export default async function CreateClinicPage() {
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">Code</h1>
         <p className="text-sm text-muted-foreground">
-          Ask your physical therapist for the code to be added to the clinic's portal.
+          Ask your physical therapist for their clinic code to join their clinic from here.
         </p>
       </div>
       <JoinClinicForm {...patient} />
