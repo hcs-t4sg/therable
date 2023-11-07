@@ -18,7 +18,7 @@ export default function JoinClinicForm(patient: Patient) {
   const [clinicCode, setClinicCode] = useState<string>("")
   const [clinicName, setClinicName] = useState<string>("");
   const [clinicId, setClinicId] = useState<string>("");
-  const [confirmation, setConfirmation] = useState<boolean>(false);
+  // const [confirmation, setConfirmation] = useState<boolean>(false);
 
   const onSubmit = async (code: string) => {
     setIsLoading(true);
@@ -37,7 +37,7 @@ export default function JoinClinicForm(patient: Patient) {
     } else if (data && data.length > 0 && data[0]) {
         setClinicName(data[0].name);
         setClinicId(data[0].id);
-        setConfirmation(true);
+        // setConfirmation(true);
     } else {
         setErrorMessage("Could not find a clinic with this code.");
     }
@@ -91,7 +91,7 @@ export default function JoinClinicForm(patient: Patient) {
             margin: '0 auto',
             backgroundColor: 'black',
             color: 'white',
-            padding: '2px 10px', 
+            padding: '2px 10px',
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
