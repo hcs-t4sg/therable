@@ -40,12 +40,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>
-          <div className={`min-h-screen bg-white flex ${session ? 'flex-row' : 'flex-col'}`}>
-            {session && (<div className="flex flex-col w-full max-w-[15rem] h-screen border-r border-gray-300">
+          <div className={`flex min-h-screen bg-white ${session ? "flex-row" : "flex-col"}`}>
+            {session && (
+              <div className="flex h-screen w-full max-w-[15rem] flex-col border-r border-gray-300">
                 <>
                   <div className="flex-grow-1" />
                   <Navbar />
-                  <div className="flex-grow"/>
+                  <div className="flex-grow" />
                 </>
               </div>
             )}
