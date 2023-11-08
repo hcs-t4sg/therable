@@ -25,5 +25,5 @@ export default async function AuthStatus() {
     return;
   }
 
-  return <UserNav profile={profile} />;
+  return <UserNav session={session} profile={profile} />;
 }
