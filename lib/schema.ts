@@ -36,8 +36,8 @@ export interface Database {
         Insert: {
           clinic_id?: string | null;
           diagnosis: string;
-          id: string;
-          join_date: string;
+          id?: string;
+          join_date?: string;
           patient_id?: string | null;
         };
         Update: {
@@ -66,9 +66,9 @@ export interface Database {
         Row: {
           city: string | null;
           employer: string | null;
-          first_name: string | null;
+          first_name: string;
           id: string;
-          last_name: string | null;
+          last_name: string;
           state: string | null;
           user_id: string | null;
           zip: string | null;
@@ -76,9 +76,9 @@ export interface Database {
         Insert: {
           city?: string | null;
           employer?: string | null;
-          first_name?: string | null;
+          first_name: string;
           id?: string;
-          last_name?: string | null;
+          last_name: string;
           state?: string | null;
           user_id?: string | null;
           zip?: string | null;
@@ -86,9 +86,9 @@ export interface Database {
         Update: {
           city?: string | null;
           employer?: string | null;
-          first_name?: string | null;
+          first_name?: string;
           id?: string;
-          last_name?: string | null;
+          last_name?: string;
           state?: string | null;
           user_id?: string | null;
           zip?: string | null;
@@ -250,7 +250,7 @@ export interface Database {
           sender: string | null;
         };
         Insert: {
-          id: string;
+          id?: string;
           media?: string | null;
           message: string;
           receiver?: string | null;
@@ -328,9 +328,9 @@ export interface Database {
         Row: {
           age: number | null;
           city: string | null;
-          first_name: string | null;
+          first_name: string;
           id: string;
-          last_name: string | null;
+          last_name: string;
           state: string | null;
           user_id: string;
           zip: string | null;
@@ -338,9 +338,9 @@ export interface Database {
         Insert: {
           age?: number | null;
           city?: string | null;
-          first_name?: string | null;
+          first_name: string;
           id?: string;
-          last_name?: string | null;
+          last_name: string;
           state?: string | null;
           user_id: string;
           zip?: string | null;
@@ -348,9 +348,9 @@ export interface Database {
         Update: {
           age?: number | null;
           city?: string | null;
-          first_name?: string | null;
+          first_name?: string;
           id?: string;
-          last_name?: string | null;
+          last_name?: string;
           state?: string | null;
           user_id?: string;
           zip?: string | null;
