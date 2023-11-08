@@ -1,7 +1,6 @@
 import { TypographyH2, TypographyP } from "@/components/ui/typography";
 import { createServerSupabaseClient } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
-import PatientCard from "../../components/patient-card";
 
 export default async function Dashboard() {
   // Create supabase server component client and obtain user session from stored cookie
