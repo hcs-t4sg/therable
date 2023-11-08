@@ -7,15 +7,12 @@ interface PageHeaderProps {
 
 const PageHeader: React.FC<PageHeaderProps> = ({ clinicName, activePatients }) => {
   return (
-    <div className="p-4 flex flex-col justify-between items-start">
+    <div className="flex flex-col items-start justify-between p-4">
       <div>
         <h1 className="text-3xl font-bold">{clinicName}</h1>
-        {activePatients != null && (
-        <p>
-          Active Patients: {activePatients}
-        </p>)}
+        {activePatients != null && <p>Active Patients: {activePatients}</p>}
       </div>
-      <hr className="w-full mt-2 border-gray-300"></hr>
+      <hr className="mt-2 w-full border-gray-300"></hr>
     </div>
   );
 };
