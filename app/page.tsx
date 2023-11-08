@@ -13,6 +13,6 @@ export default async function Home() {
     redirect("/login");
   } else {
     // Users who are already signed in should be redirected to dashboard
-    redirect("/dashboard")
+    redirect("/dashboard");
   }
 }
