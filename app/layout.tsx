@@ -35,12 +35,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <Providers>
           <div className={`min-h-screen bg-white flex ${session ? 'flex-row' : 'flex-col'}`}>
-            {session && (<div className="flex flex-col w-full max-w-xs h-screen border-r border-gray-300">
+            {session && (<div className="flex flex-col w-full max-w-[15rem] h-screen border-r border-gray-300">
                 <>
-                  <div className="flex-grow-1"></div>
+                  <div className="flex-grow-1" />
                   <Navbar />
-                  <div className="flex-grow">
-                  </div>
+                  <div className="flex-grow"/>
                 </>
 
             </div>
