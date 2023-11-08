@@ -2,8 +2,8 @@
 create table patients (
   id uuid not null primary key,
   user_id uuid not null references auth.users(id),
-  first_name not null text,
-  last_name not null text,
+  first_name text,
+  last_name text,
   age integer,
   state text,
   city text,
@@ -14,8 +14,8 @@ create table patients (
 create table clinicians (
   id uuid not null primary key,
   user_id uuid references auth.users(id),
-  first_name not null text,
-  last_name not null text,
+  first_name text,
+  last_name text,
   employer text,
   state text,
   city text,

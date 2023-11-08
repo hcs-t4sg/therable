@@ -1,14 +1,8 @@
 import { z } from "zod";
 
 const patientSchema = z.object({
-  first_name: z
-    .string()
-    .nullable()
-    .transform((val) => (val?.trim() === "" ? null : val?.trim())),
-  last_name: z
-    .string()
-    .nullable()
-    .transform((val) => (val?.trim() === "" ? null : val?.trim())),
+  first_name: z.string().min(1),
+  last_name: z.string().min(1),
   age: z.coerce
     .number()
     .int()
@@ -30,14 +24,8 @@ const patientSchema = z.object({
 });
 
 const clinicianSchema = z.object({
-  first_name: z
-    .string()
-    .nullable()
-    .transform((val) => (val?.trim() === "" ? null : val?.trim())),
-  last_name: z
-    .string()
-    .nullable()
-    .transform((val) => (val?.trim() === "" ? null : val?.trim())),
+  first_name: z.string().min(1),
+  last_name: z.string().min(1),
   employer: z
     .string()
     .nullable()
