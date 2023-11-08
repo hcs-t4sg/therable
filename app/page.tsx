@@ -1,4 +1,3 @@
-import { TypographyH2 } from "@/components/ui/typography";
 import { createServerSupabaseClient } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
 
@@ -10,8 +9,10 @@ export default async function Home() {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    // Users who are already signed in should be redirected to dashboard
+    // Users who aren't signed in should be directed to do so.
     redirect("/login");
+  } else {
+    // Users who are already signed in should be redirected to dashboard
+    redirect("/dashboard")
   }
-  return <TypographyH2>Welcome to Therable!</TypographyH2>;
 }
