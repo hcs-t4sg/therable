@@ -36,8 +36,8 @@ export interface Database {
         Insert: {
           clinic_id?: string | null;
           diagnosis: string;
-          id: string;
-          join_date: string;
+          id?: string;
+          join_date?: string;
           patient_id?: string | null;
         };
         Update: {
@@ -66,9 +66,9 @@ export interface Database {
         Row: {
           city: string | null;
           employer: string | null;
-          first_name: string | null;
+          first_name: string;
           id: string;
-          last_name: string | null;
+          last_name: string;
           state: string | null;
           user_id: string | null;
           zip: string | null;
@@ -76,9 +76,9 @@ export interface Database {
         Insert: {
           city?: string | null;
           employer?: string | null;
-          first_name?: string | null;
+          first_name: string;
           id?: string;
-          last_name?: string | null;
+          last_name: string;
           state?: string | null;
           user_id?: string | null;
           zip?: string | null;
@@ -86,9 +86,9 @@ export interface Database {
         Update: {
           city?: string | null;
           employer?: string | null;
-          first_name?: string | null;
+          first_name?: string;
           id?: string;
-          last_name?: string | null;
+          last_name?: string;
           state?: string | null;
           user_id?: string | null;
           zip?: string | null;
@@ -248,13 +248,15 @@ export interface Database {
           message: string;
           receiver: string | null;
           sender: string | null;
+          time_sent: string;
         };
         Insert: {
-          id: string;
+          id?: string;
           media?: string | null;
           message: string;
           receiver?: string | null;
           sender?: string | null;
+          time_sent?: string;
         };
         Update: {
           id?: string;
@@ -262,6 +264,7 @@ export interface Database {
           message?: string;
           receiver?: string | null;
           sender?: string | null;
+          time_sent?: string;
         };
         Relationships: [
           {
@@ -328,9 +331,9 @@ export interface Database {
         Row: {
           age: number | null;
           city: string | null;
-          first_name: string | null;
+          first_name: string;
           id: string;
-          last_name: string | null;
+          last_name: string;
           state: string | null;
           user_id: string;
           zip: string | null;
@@ -338,9 +341,9 @@ export interface Database {
         Insert: {
           age?: number | null;
           city?: string | null;
-          first_name?: string | null;
+          first_name: string;
           id?: string;
-          last_name?: string | null;
+          last_name: string;
           state?: string | null;
           user_id: string;
           zip?: string | null;
@@ -348,9 +351,9 @@ export interface Database {
         Update: {
           age?: number | null;
           city?: string | null;
-          first_name?: string | null;
+          first_name?: string;
           id?: string;
-          last_name?: string | null;
+          last_name?: string;
           state?: string | null;
           user_id?: string;
           zip?: string | null;
@@ -449,7 +452,31 @@ export interface Database {
       };
     };
     Views: {
-      [_ in never]: never;
+      latest_messages: {
+        Row: {
+          media: string | null;
+          message: string | null;
+          receiver: string | null;
+          receiver_display_name: string | null;
+          sender: string | null;
+          sender_display_name: string | null;
+          time_sent: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "messages_receiver_fkey";
+            columns: ["receiver"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "messages_sender_fkey";
+            columns: ["sender"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       test_call: {
