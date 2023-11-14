@@ -26,7 +26,7 @@ export default async function MyPatients() {
 
   return (
     <>
-      <p className="text-2xl mb-10">My patients</p>
+      <p className="mb-10 text-2xl">My patients</p>
       <div className="grid grid-cols-4 gap-4">
         {patients && patients.length > 0 ? (
           patients.map((patient, i) => (
