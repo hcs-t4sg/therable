@@ -70,7 +70,7 @@ export default function CreateClinicForm(clinician: Clinician) {
       if (error) {
         setMessage(error.message);
       } else {
-        setMessage("Your clinic code: ${clinicCode}");
+        setMessage(`Your clinic code: ${clinicCode}`);
       }
     } catch (error) {
       setMessage((error as Error).message);
