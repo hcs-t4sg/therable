@@ -19,7 +19,7 @@ export default async function LoginPage() {
   return (
     <LoginCard className="sm:w-[350px]">
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Kinnect</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Therable</h1>
       </div>
       <UserAuthForm />
       <div className="flex flex-col space-y-1 text-center">

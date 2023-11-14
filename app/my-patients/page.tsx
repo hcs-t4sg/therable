@@ -28,7 +28,7 @@ export default async function MyPatients() {
     <>
       <p className="text-2xl mb-10">My patients</p>
       <div className="grid grid-cols-4 gap-4">
-        {patients ? (
+        {patients && patients.length > 0 ? (
           patients.map((patient, i) => (
             <PatientCard
               key={i}
