@@ -14,7 +14,8 @@ export default async function Page() {
   const { data, error } = await supabase
     .from("latest_messages")
     .select("*")
-    .or(`sender.eq.${user_id}, receiver.eq.${user_id}`);
+    .eq("receiver", user_id); // only recieved messages?
+    // .or(`sender.eq.${user_id}, receiver.eq.${user_id}`);
   if (error) return;
 
   return <ChatSideBar this_user_id={user_id} data={data} />;
