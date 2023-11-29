@@ -1,5 +1,6 @@
-import ChatSideBar from "@/components/chat-side-bar";
 import { createServerSupabaseClient } from "@/lib/server-utils";
+import { redirect } from "next/navigation";
+import ChatDisplay from "./chat-display";
 
 export default async function Page() {
   const supabase = createServerSupabaseClient();
@@ -7,16 +8,17 @@ export default async function Page() {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (!session) return;
-  const user_id = session.user.id;
+  if (!session) {
+    redirect("/");
+  }
 
-  // TODO There's probably a better way to only grab rows that below to this user i.e. without having to grab the id from the seesion?
-  const { data, error } = await supabase
-    .from("latest_messages")
-    .select("*")
-    .eq("receiver", user_id); // only recieved messages?
-    // .or(`sender.eq.${user_id}, receiver.eq.${user_id}`);
-  if (error) return;
+  const userId = session.user.id;
+  const previews = await supabase.from("latest_messages").select().eq("receiver", userId);
+  const messages = await supabase.from("messages").select().or(`sender.eq.${userId}, receiver.eq.${userId}`);
 
-  return <ChatSideBar this_user_id={user_id} data={data} />;
+  if (previews.error ?? messages.error) {
+    return;
+  }
+
+  return <ChatDisplay userId={userId} previews={previews.data} messages={messages.data} />;
 }
