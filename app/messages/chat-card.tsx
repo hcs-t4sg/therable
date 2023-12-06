@@ -1,3 +1,5 @@
+import { type Target } from "./chat-display";
+
 function trim_text(text: string, length: number, with_ellipsis = false) {
   length = Math.min(text.length, length);
   return text.substring(0, length) + (with_ellipsis && text.length != length ? "..." : "");
@@ -9,16 +11,16 @@ interface ChatCardProps {
   senderId: string;
   senderName: string;
   preview: string;
-  focus: boolean;
-  setFocus: (id: string) => void;
+  focused: boolean;
+  setFocus: (target: Target) => void;
 }
 
-export default function ChatCard({ senderId, senderName, preview, focus, setFocus }: ChatCardProps) {
-  const border = focus ? "border-slate-900" : "border-slate-500";
+export default function ChatCard({ senderId, senderName, preview, focused, setFocus }: ChatCardProps) {
+  const border = focused ? "border-slate-900" : "border-slate-500";
   const style = "flex flex-row gap-4 rounded-lg border-2 p-4";
 
   return (
-    <button onClick={() => setFocus(senderId)}>
+    <button onClick={() => setFocus({ targetId: senderId, targetName: senderName })}>
       <div className={style + " " + border}>
         <div className="shrink">
           <div className="h-24 w-24 rounded-3xl border-2 border-slate-500"></div>

@@ -5,11 +5,17 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import ChatCard from "./chat-card";
+import ChatInput from "./chat-input";
 import ChatText from "./chat-text";
 
 type Views<T extends keyof Database["public"]["Views"]> = Database["public"]["Views"][T]["Row"];
 type Preview = Views<"latest_messages">;
 type Message = Database["public"]["Tables"]["messages"]["Row"];
+
+export interface Target {
+  targetId: string;
+  targetName: string;
+}
 
 interface ChatDisplayProps {
   userId: string;
@@ -18,7 +24,7 @@ interface ChatDisplayProps {
 }
 
 export default function ChatDisplay({ userId, previews, messages }: ChatDisplayProps) {
-  const [focus, setFocus] = useState<string | undefined>();
+  const [focus, setFocus] = useState<Target | undefined>();
   const [prevs, setPrevs] = useState<Preview[]>(previews);
   const [msgs, setMsgs] = useState<Message[]>(messages);
   const supabase = createClientComponentClient<Database>();
@@ -81,7 +87,7 @@ export default function ChatDisplay({ userId, previews, messages }: ChatDisplayP
                 senderId={prev.sender ?? ""}
                 senderName={prev.sender_display_name ?? ""}
                 preview={prev.message ?? ""}
-                focus={prev.sender == focus}
+                focused={prev.sender == focus?.targetId}
                 setFocus={setFocus}
               />
             ))}
@@ -98,9 +104,15 @@ export default function ChatDisplay({ userId, previews, messages }: ChatDisplayP
       <div className="col-span-7 h-screen p-6">
         {focus && (
           <div className="h-full rounded-md border-2 border-slate-900 px-4 py-6">
-            {msgs.map((msg, idx) => (
-              <ChatText key={idx} userId={userId} message={msg} />
-            ))}
+            <div className="h-[80%] overflow-auto">
+                  {msgs.map(
+                    (msg, idx) =>
+                      (msg.sender == focus.targetId || msg.receiver == focus.targetId) && (
+                        <ChatText key={idx} userId={userId} message={msg} targetName={focus.targetName} />
+                      ),
+                  )}
+            </div>
+            <ChatInput userId={userId} targetId={focus.targetId} />
           </div>
         )}
       </div>
