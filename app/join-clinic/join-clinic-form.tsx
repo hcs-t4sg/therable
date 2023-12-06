@@ -2,7 +2,7 @@
 
 import { type Database } from "@/lib/schema";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 type Patient = Database["public"]["Tables"]["patients"]["Row"];
 
 // CF&Y@cHWrxI$z8p3
