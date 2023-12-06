@@ -1,6 +1,10 @@
 import { createServerSupabaseClient } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
 import ChatDisplay from "./chat-display";
+import { type Database } from "@/lib/schema";
+
+type Views<T extends keyof Database["public"]["Views"]> = Database["public"]["Views"][T]["Row"];
+type Preview = Views<"latest_messages">;
 
 export default async function Page() {
   const supabase = createServerSupabaseClient();
@@ -13,7 +17,7 @@ export default async function Page() {
   }
 
   const userId = session.user.id;
-  const previews = await supabase.from("latest_messages").select().eq("receiver", userId);
+  const previews = await supabase.from("latest_messages").select().or(`sender.eq.${userId}, receiver.eq.${userId}`);
   const messages = await supabase.from("messages").select().or(`sender.eq.${userId}, receiver.eq.${userId}`);
 
   if (previews.error ?? messages.error) {

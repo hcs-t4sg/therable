@@ -31,7 +31,7 @@ export default function ChatDisplay({ userId, previews, messages }: ChatDisplayP
 
   useEffect(() => {
     const getData = async () => {
-      const { data, error } = await supabase.from("latest_messages").select().eq("receiver", userId);
+      const { data, error } = await supabase.from("latest_messages").select().or(`sender.eq.${userId}, receiver.eq.${userId}`);
       if (!error && data) {
         setPrevs(data);
       }
