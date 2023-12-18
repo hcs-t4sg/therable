@@ -248,6 +248,7 @@ export interface Database {
           message: string;
           receiver: string | null;
           sender: string | null;
+          time_sent: string;
         };
         Insert: {
           id?: string;
@@ -255,6 +256,7 @@ export interface Database {
           message: string;
           receiver?: string | null;
           sender?: string | null;
+          time_sent?: string;
         };
         Update: {
           id?: string;
@@ -262,6 +264,7 @@ export interface Database {
           message?: string;
           receiver?: string | null;
           sender?: string | null;
+          time_sent?: string;
         };
         Relationships: [
           {
@@ -449,7 +452,31 @@ export interface Database {
       };
     };
     Views: {
-      [_ in never]: never;
+      latest_messages: {
+        Row: {
+          media: string | null;
+          message: string | null;
+          receiver: string | null;
+          receiver_display_name: string | null;
+          sender: string | null;
+          sender_display_name: string | null;
+          time_sent: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "messages_receiver_fkey";
+            columns: ["receiver"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "messages_sender_fkey";
+            columns: ["sender"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       test_call: {
