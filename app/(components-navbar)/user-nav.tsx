@@ -12,16 +12,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { type Database } from "@/lib/schema";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { LogOut, Settings, User } from "lucide-react";
+import { createClientComponentClient, type Session } from "@supabase/auth-helpers-nextjs";
+import { LogOut, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
-export default function UserNav({ profile }: { profile: Profile }) {
+export default function UserNav({ profile, session }: { profile: Profile; session: Session }) {
   // Create Supabase client (for client components)
   const supabaseClient = createClientComponentClient<Database>();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const userType = session.user.user_metadata.type; // all user metadata is defined as an any type.
 
   const router = useRouter();
 
@@ -51,15 +53,15 @@ export default function UserNav({ profile }: { profile: Profile }) {
         <DropdownMenuGroup>
           {/* Using Next Link: https://github.com/radix-ui/primitives/issues/1105 */}
           <DropdownMenuItem asChild>
-            <Link href="/settings/profile">
+            <Link href={userType === "clinician" ? "/create-clinic" : "/join-clinic"}>
               <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+              <span>{userType === "clinician" ? "Create clinic" : "Join clinic"}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/settings/general">
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
+            <Link href="/background">
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

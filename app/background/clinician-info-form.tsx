@@ -15,8 +15,8 @@ export default function ClinicianInfoForm(clinician: Clinician) {
   const router = useRouter();
 
   const defaultValues: Partial<ClinicianData> = {
-    first_name: clinician.first_name ?? undefined,
-    last_name: clinician.last_name ?? undefined,
+    first_name: clinician.first_name,
+    last_name: clinician.last_name,
     employer: clinician.employer ?? undefined,
     state: clinician.state ?? undefined,
     city: clinician.city ?? undefined,
