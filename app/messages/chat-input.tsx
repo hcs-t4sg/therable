@@ -2,10 +2,10 @@ import { toast } from "@/components/ui/use-toast";
 import { type Database } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 import { type BaseSyntheticEvent } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
 
 const messageSchema = z.object({
   message: z.string().min(1, { message: "Nonempty input required." }),
