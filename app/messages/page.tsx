@@ -1,10 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
 import ChatDisplay from "./chat-display";
-import { type Database } from "@/lib/schema";
-
-type Views<T extends keyof Database["public"]["Views"]> = Database["public"]["Views"][T]["Row"];
-type Preview = Views<"latest_messages">;
 
 export default async function Page() {
   const supabase = createServerSupabaseClient();
@@ -24,5 +20,25 @@ export default async function Page() {
     return;
   }
 
-  return <ChatDisplay userId={userId} previews={previews.data} messages={messages.data} />;
+  const filteredPrevs: typeof previews.data = [];
+  for (let i = 0; i < previews.data.length; i++) {
+    const other = previews.data[i]?.sender == userId ? previews.data[i]?.receiver : previews.data[i]?.sender;
+    if (filteredPrevs.some((cmp) => cmp.sender == other || cmp.receiver == other)) {
+      continue;
+    }
+
+    let min = i;
+    for (let j = i + 1; j < previews.data.length; j++) {
+      const minTime = Date.parse(previews.data[min]?.time_sent ?? "");
+      const cmpTime = Date.parse(previews.data[j]?.time_sent ?? "");
+
+      if ((previews.data[j]?.sender == other || previews.data[j]?.receiver == other) && cmpTime > minTime) {
+        min = j;
+      }
+    }
+
+    filteredPrevs.push(previews.data[min]!);
+  }
+
+  return <ChatDisplay userId={userId} previews={filteredPrevs} messages={messages.data} />;
 }

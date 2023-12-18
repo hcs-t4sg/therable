@@ -31,9 +31,32 @@ export default function ChatDisplay({ userId, previews, messages }: ChatDisplayP
 
   useEffect(() => {
     const getData = async () => {
-      const { data, error } = await supabase.from("latest_messages").select().or(`sender.eq.${userId}, receiver.eq.${userId}`);
+      const { data, error } = await supabase
+        .from("latest_messages")
+        .select()
+        .or(`sender.eq.${userId}, receiver.eq.${userId}`);
       if (!error && data) {
-        setPrevs(data);
+        const filteredPrevs: typeof data = [];
+        for (let i = 0; i < data.length; i++) {
+          const other = data[i]?.sender == userId ? data[i]?.receiver : data[i]?.sender;
+          if (filteredPrevs.some((cmp) => cmp.sender == other || cmp.receiver == other)) {
+            continue;
+          }
+
+          let min = i;
+          for (let j = i + 1; j < data.length; j++) {
+            const minTime = Date.parse(data[min]?.time_sent ?? "");
+            const cmpTime = Date.parse(data[j]?.time_sent ?? "");
+
+            if ((data[j]?.sender == other || data[j]?.receiver == other) && cmpTime > minTime) {
+              min = j;
+            }
+          }
+
+          filteredPrevs.push(data[min]!);
+        }
+
+        setPrevs(filteredPrevs);
       }
     };
 
@@ -66,6 +89,7 @@ export default function ChatDisplay({ userId, previews, messages }: ChatDisplayP
         },
         (payload) => {
           setMsgs([...msgs, payload.new as Message]);
+          void getData();
         },
       )
       .subscribe();
@@ -81,16 +105,37 @@ export default function ChatDisplay({ userId, previews, messages }: ChatDisplayP
       <div className="col-span-3 p-6">
         <ScrollArea.Root>
           <ScrollArea.Viewport>
-            {prevs.map((prev, idx) => (
-              <ChatCard
-                key={idx}
-                senderId={prev.sender ?? ""}
-                senderName={prev.sender_display_name ?? ""}
-                preview={prev.message ?? ""}
-                focused={prev.sender == focus?.targetId}
-                setFocus={setFocus}
-              />
-            ))}
+            {prevs
+              .sort((a, b) => Date.parse(b.time_sent ?? "") - Date.parse(a.time_sent ?? ""))
+              .map((prev, idx) => {
+                const otherId = prev.sender == userId ? prev.receiver : prev.sender;
+                const otherName = prev.sender == userId ? prev.receiver_display_name : prev.sender_display_name;
+                let previewMsg = prev.sender;
+
+                if (prev.sender == userId) {
+                  const diff = Date.now() - Date.parse(prev.time_sent!);
+                  const time = Math.floor(diff / (1000 * 60));
+
+                  if (time < 60) {
+                    previewMsg = `Sent ${time}m ago`;
+                  } else if (60 <= time && time < 1440) {
+                    previewMsg = `Sent ${Math.floor(time / 60)}h ago`;
+                  } else if (time >= 1440) {
+                    previewMsg = `Sent ${Math.floor(time / (60 * 24))}d ago`;
+                  }
+                }
+
+                return (
+                  <ChatCard
+                    key={idx}
+                    otherId={otherId ?? ""}
+                    otherName={otherName ?? ""}
+                    preview={previewMsg ?? ""}
+                    focused={otherId == focus?.targetId}
+                    setFocus={setFocus}
+                  />
+                );
+              })}
           </ScrollArea.Viewport>
           <ScrollArea.Scrollbar orientation="horizontal">
             <ScrollArea.Thumb />
@@ -105,12 +150,12 @@ export default function ChatDisplay({ userId, previews, messages }: ChatDisplayP
         {focus && (
           <div className="h-full rounded-md border-2 border-slate-900 px-4 py-6">
             <div className="h-[80%] overflow-auto">
-                  {msgs.map(
-                    (msg, idx) =>
-                      (msg.sender == focus.targetId || msg.receiver == focus.targetId) && (
-                        <ChatText key={idx} userId={userId} message={msg} targetName={focus.targetName} />
-                      ),
-                  )}
+              {msgs.map(
+                (msg, idx) =>
+                  (msg.sender == focus.targetId || msg.receiver == focus.targetId) && (
+                    <ChatText key={idx} userId={userId} message={msg} targetName={focus.targetName} />
+                  ),
+              )}
             </div>
             <ChatInput userId={userId} targetId={focus.targetId} />
           </div>
